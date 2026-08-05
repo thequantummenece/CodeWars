@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}About | CODE//WARS{% endblock %}
+{% block page_class %}page--sidebar{% endblock %}
+
+{% block sidebar %}{% include "partials/sidebar.html" %}{% endblock %}
+
+{% block content %}
+    <p class="eyebrow">// ABOUT_THE_PLATFORM</p>
+    <h1 class="page-title">ABOUT CODE//WARS</h1>
+
+    <p class="lead">
+        We built this for people who learn by doing. Reading about algorithms only
+        gets you so far &mdash; writing them is what makes them stick.
+    </p>
+
+    <h2>WHAT WE OFFER</h2>
+    <ul class="checklist">
+        <li>A growing library of challenges, tagged by topic and difficulty.</li>
+        <li>An AI guru that hands you hints and questions, never working code.</li>
+        <li>Elo-matched duels that pit you against other devs in real time.</li>
+        <li>Community solutions, so you can compare your approach with others.</li>
+    </ul>
+
+    <h2>HOW IT WORKS</h2>
+    <ol class="steps">
+        <li><strong>Pick a fight</strong> &mdash; a challenge that matches your level.</li>
+        <li><strong>Write your solution</strong> in the language you know best.</li>
+        <li><strong>Submit and iterate</strong> until every test case passes.</li>
+        <li><strong>Queue up</strong> and put the skill to work in a ranked duel.</li>
+    </ol>
+
+    <p>
+        Have an idea for a feature or a challenge you'd like to see?
+        <a href="{% url 'contact' %}">Open a channel</a>.
+    </p>
+{% endblock %}

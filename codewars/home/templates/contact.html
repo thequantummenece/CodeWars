@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Contact | CODE//WARS{% endblock %}
+{% block page_class %}page--sidebar{% endblock %}
+
+{% block sidebar %}{% include "partials/sidebar.html" %}{% endblock %}
+
+{% block content %}
+    <p class="eyebrow">// OPEN_A_CHANNEL</p>
+    <h1 class="page-title">CONTACT</h1>
+
+    {% if sent %}
+        <p class="alert">TRANSMISSION RECEIVED &mdash; thanks, {{ name }}. We'll get back to you.</p>
+    {% endif %}
+
+    <p class="lead">
+        Questions, bug reports, or a challenge you'd like us to add? Drop us a line.
+    </p>
+
+    <form class="contact-form" method="post">
+        {% csrf_token %}
+
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject">
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+
+        <button class="btn btn--cyan" type="submit">SEND MESSAGE</button>
+    </form>
+
+    <h2>OTHER CHANNELS</h2>
+    <ul class="contact-details">
+        <li><strong>EMAIL:</strong> <a href="mailto:aadeshmalani@gmail.com">aadeshmalani@gmail.com</a></li>
+        <li><strong>HOURS:</strong> MON&ndash;FRI, 09:00&ndash;18:00 UTC</li>
+    </ul>
+{% endblock %}

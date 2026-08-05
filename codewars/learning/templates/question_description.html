@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{# context: question #}
+
+{% block title %}{{ question.q_title }} | CODE//WARS{% endblock %}
+
+{% block content %}
+<section class="band qd">
+    <div class="wrap">
+
+        <a class="qd-back" href="{% url 'questions' %}">&larr; ALL PROBLEMS</a>
+
+        <div class="qd-head">
+            <h1 class="qd-title">{{ question.q_title }}</h1>
+            <span class="qd-no">#{{ question.q_no }}</span>
+            <span class="pill pill--{{ question.q_difficulty|lower }}">{{ question.q_difficulty|upper }}</span>
+            <span class="tag">{{ question.q_tag }}</span>
+        </div>
+
+        <div class="qd-grid">
+
+            <article class="panel panel--cyan qd-problem">
+                <p class="eyebrow">// PROBLEM</p>
+
+                <h2 class="qd-h2">DESCRIPTION</h2>
+                <div class="qd-content">{{ question.q_description|linebreaks }}</div>
+
+                <div class="io-grid">
+                    <div>
+                        <h2 class="qd-h2">INPUT</h2>
+                        <pre class="io-block">{{ question.q_input_format }}</pre>
+                    </div>
+                    <div>
+                        <h2 class="qd-h2">OUTPUT</h2>
+                        <pre class="io-block">{{ question.q_output_format }}</pre>
+                    </div>
+                </div>
+
+                <h2 class="qd-h2">EXAMPLE</h2>
+                <pre class="io-block io-block--sample">{{ question.q_sample_io }}</pre>
+
+                <p class="qd-meta">PUBLISHED {{ question.date_published }}</p>
+            </article>
+
+            <form class="panel panel--magenta codespace" method="post" id="codeForm">
+                {% csrf_token %}
+
+                <div class="codespace-head">
+                    <p class="eyebrow">// CODESPACE</p>
+                    <span class="lang-pill">PYTHON</span>
+                </div>
+
+                <textarea class="code-editor" name="code" id="codeEditor" spellcheck="false" wrap="off">def solve():
+    # your code here
+    pass
+</textarea>
+
+                <div class="codespace-foot">
+                    <input class="custom-input" type="text" name="custom_input" id="customInput"
+                           autocomplete="off" placeholder="Custom input (leave blank to use the example)">
+
+                    <div class="codespace-actions">
+                        <span class="codespace-hint">RUN is ungraded. SUBMIT grades against the hidden suite.</span>
+                        <div class="codespace-btns">
+                            <button class="btn btn--cyan-outline" type="button" id="runBtn">RUN</button>
+                            <button class="btn btn--cyan" type="submit" id="submitBtn">SUBMIT</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <section class="panel panel--green guru">
+                <div class="guru-head">
+                    <p class="eyebrow">// AI GURU</p>
+                    <span class="guru-status"><span class="pulse-dot"></span>STANDBY</span>
+                </div>
+
+                <div class="guru-thread" id="guruThread">
+                    <p class="guru-msg guru-msg--bot">
+                        Tell me where you're stuck and I'll ask the question that gets you
+                        unstuck. I won't hand you the solution &mdash; you write that.
+                    </p>
+                </div>
+
+                <form class="guru-foot" method="post" id="guruForm">
+                    {% csrf_token %}
+                    <input class="guru-input" type="text" name="message" id="guruInput"
+                           autocomplete="off" placeholder="Ask the guru...">
+                    <button class="btn btn--green" type="submit">SEND</button>
+                </form>
+            </section>
+
+        </div>
+    </div>
+</section>
+
+
+{# ---------------------------------------------------------------- SUBMIT #}
+<div class="modal" id="verdictModal" hidden>
+    <div class="modal-backdrop" data-close></div>
+
+    <div class="modal-box panel panel--green" id="verdictBox">
+        <p class="verdict-title" id="verdictTitle">ACCEPTED</p>
+
+        <div class="verdict-stats">
+            <div><span class="vs-num" id="vsTests">-</span><span class="vs-label">TESTS PASSED</span></div>
+            <div><span class="vs-num" id="vsRuntime">-</span><span class="vs-label">RUNTIME</span></div>
+            <div><span class="vs-num" id="vsMemory">-</span><span class="vs-label">MEMORY</span></div>
+        </div>
+
+        <ul class="case-list" id="caseList"></ul>
+
+        <p class="verdict-fail" id="verdictFail" hidden></p>
+
+        <p class="mock-note">TEMPORARY &mdash; the judge isn't wired up. These results are simulated.</p>
+
+        <div class="modal-foot">
+            <button class="btn btn--ghost" type="button" data-close>BACK TO CODE</button>
+            <button class="btn btn--green" type="button" id="askGuruBtn">ASK THE GURU</button>
+        </div>
+    </div>
+</div>
+
+
+{# ------------------------------------------------------------------- RUN #}
+<div class="modal" id="runModal" hidden>
+    <div class="modal-backdrop" data-close></div>
+
+    <div class="term">
+        <div class="term-bar">
+            <span class="term-dot term-dot--red"></span>
+            <span class="term-dot term-dot--yellow"></span>
+            <span class="term-dot term-dot--green"></span>
+            <span class="term-title">guru@codewars: ~/run</span>
+            <button class="term-close" type="button" data-close>CLOSE</button>
+        </div>
+        <pre class="term-body" id="termBody"></pre>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'js/question_description.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% with active=request.resolver_match.url_name %}
+<header class="topnav">
+    <div class="topnav-inner">
+        <a class="logo" href="{% url 'home' %}">
+            <span class="logo-code">CODE</span><span class="logo-slash">//</span><span class="logo-wars">WARS</span>
+        </a>
+
+        <nav class="navlinks">
+            <a href="{% url 'home' %}" class="navlink navlink--cyan {% if active == 'home' %}is-active{% endif %}">HOME</a>
+            <a href="{% url 'questions' %}" class="navlink navlink--cyan {% if active == 'questions' or active == 'question_description' %}is-active{% endif %}">QUESTIONS</a>
+            <a href="{% url 'compete' %}" class="navlink navlink--magenta {% if active == 'compete' %}is-active{% endif %}">COMPETE</a>
+        </nav>
+
+        <div class="topnav-right">
+            {% if user.is_authenticated %}
+                <div class="elo-badge">
+                    <span class="pulse-dot"></span>
+                    <span class="elo-label">ELO {{ elo|default:"1450" }}</span>
+                </div>
+                <span class="nav-user">{{ user.username|upper }}</span>
+                <a class="nav-auth nav-auth--out" href="{% url 'logout' %}">LOGOUT</a>
+            {% else %}
+                <a class="nav-auth" href="{% url 'home' %}#access">LOG IN</a>
+                <a class="nav-auth nav-auth--cta" href="{% url 'home' %}#access">SIGN UP</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+{% endwith %}

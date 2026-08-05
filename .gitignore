@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------- Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ---------------------------------------------------------------- Virtualenv
+.venv/
+venv/
+env/
+ENV/
+
+# ---------------------------------------------------------------- Django
+# The database is disposable — `python manage.py seed_problems` rebuilds the
+# problem bank, so there is no reason to version a binary that churns constantly.
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3.bak-*
+
+*.log
+local_settings.py
+
+# collectstatic output. Sources live in codewars/static/ and ARE tracked.
+/staticfiles/
+/static_root/
+/media/
+
+# ---------------------------------------------------------------- Secrets
+# settings.py still holds a dev SECRET_KEY inline. Once it moves to the
+# environment, it lands here.
+.env
+.env.*
+!.env.example
+*.pem
+secrets.json
+
+# ---------------------------------------------------------------- Tooling
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# ---------------------------------------------------------------- Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code: local dev tooling (skills, design handoff). Not part of the app.
+.claude/
+.Claude/
+
+# ---------------------------------------------------------------- OS
+.DS_Store
+Thumbs.db
+desktop.ini

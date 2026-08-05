@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{# context: questions = Questions queryset #}
+
+{% block title %}Questions | CODE//WARS{% endblock %}
+
+{% block content %}
+<section class="band">
+    <div class="wrap">
+        <p class="eyebrow">// SELECT_TARGET</p>
+        <h1 class="section-title">PICK YOUR FIGHT</h1>
+
+        <div class="q-table">
+            <div class="q-head">
+                <span>#</span>
+                <span>PROBLEM</span>
+                <span>DIFFICULTY</span>
+                <span>TAGS</span>
+            </div>
+
+            {% for question in questions %}
+                <a class="q-row" href="{% url 'question_description' question.q_no %}">
+                    <span class="q-num">{{ question.q_no }}</span>
+                    <span class="q-name">{{ question.q_title }}</span>
+                    <span class="q-diff">
+                        <span class="pill pill--{{ question.q_difficulty|lower }}">{{ question.q_difficulty|upper }}</span>
+                    </span>
+                    <span class="q-tags"><span class="tag">{{ question.q_tag }}</span></span>
+                </a>
+            {% empty %}
+                <p class="q-empty">NO PROBLEMS SEEDED YET.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

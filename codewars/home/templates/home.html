@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}CODE//WARS &mdash; Train. Duel. Rank up.{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">// INITIALIZE ALGORITHMS</p>
+        <h1 class="hero-title">
+            TRAIN HARD.<br>
+            <span class="accent-magenta">DUEL HARDER.</span>
+        </h1>
+        <p class="hero-sub">
+            Solve real problems with an AI guru that gives you hints, never answers.
+            Then drop the mentor and duel other devs on the clock.
+        </p>
+        <div class="hero-cta">
+            <a class="btn btn--cyan" href="{% url 'questions' %}">START SOLVING</a>
+            <a class="btn btn--magenta-outline" href="{% url 'compete' %}">COMPETE NOW</a>
+        </div>
+    </div>
+</section>
+
+<section class="band" id="about">
+    <div class="wrap">
+        <p class="eyebrow">// ABOUT_THE_PLATFORM</p>
+        <h2 class="section-title">BUILT FOR PEOPLE WHO SHIP</h2>
+
+        <div class="about-grid">
+            <article class="panel panel--cyan">
+                <p class="eyebrow">01 // MENTOR</p>
+                <h3>AI GURU</h3>
+                <p>
+                    Stuck on a problem? The guru asks the question that unsticks you and
+                    points straight at the gap in your logic. It will never hand you
+                    working code &mdash; you write the solution, every time.
+                </p>
+            </article>
+
+            <article class="panel panel--magenta">
+                <p class="eyebrow">02 // ARENA</p>
+                <h3>REAL-TIME DUELS</h3>
+                <p>
+                    Queue up and get matched against a dev at your level. Fifteen minutes
+                    on the clock, no hints, no mentor &mdash; the first correct submission
+                    takes the match.
+                </p>
+            </article>
+
+            <article class="panel panel--green">
+                <p class="eyebrow">03 // RANK</p>
+                <h3>RANKED ELO</h3>
+                <p>
+                    Every duel moves your rating up or down. Climb from the bottom of the
+                    ladder to the top of the board, one match at a time, and see exactly
+                    where you stand.
+                </p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="band band--auth" id="access">
+    <div class="wrap">
+        <p class="eyebrow">// ACCESS_TERMINAL</p>
+
+        {% if user.is_authenticated %}
+            <h2 class="section-title">YOU'RE JACKED IN</h2>
+            <div class="panel panel--green auth-status">
+                <p class="auth-status-line">
+                    <span class="pulse-dot"></span>
+                    SESSION ACTIVE &mdash; <strong>{{ user.username|upper }}</strong>
+                </p>
+                <p>
+                    {% if user.first_name %}Welcome back, {{ user.first_name }}. {% endif %}
+                    Pick a problem and get to work, or queue up for a ranked duel.
+                </p>
+                <div class="auth-status-cta">
+                    <a class="btn btn--cyan" href="{% url 'questions' %}">START SOLVING</a>
+                    <a class="btn btn--magenta-outline" href="{% url 'compete' %}">COMPETE NOW</a>
+                    <a class="btn btn--ghost" href="{% url 'logout' %}">LOG OUT</a>
+                </div>
+            </div>
+
+        {% else %}
+            <h2 class="section-title">JACK IN</h2>
+
+            <div class="auth-grid">
+                <form class="panel panel--cyan auth-panel" method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <p class="eyebrow">01 // RETURNING</p>
+                    <h3>LOG IN</h3>
+
+                    <label for="lusername">Username</label>
+                    <input type="text" id="lusername" name="lusername" autocomplete="username" required>
+
+                    <label for="Password">Password</label>
+                    <input type="password" id="Password" name="Password" autocomplete="current-password" required>
+
+                    <button class="btn btn--cyan" type="submit">ENTER</button>
+                </form>
+
+                <form class="panel panel--magenta auth-panel" method="post" action="{% url 'signup' %}">
+                    {% csrf_token %}
+                    <p class="eyebrow">02 // NEW OPERATOR</p>
+                    <h3>CREATE ACCOUNT</h3>
+
+                    <div class="auth-row">
+                        <div>
+                            <label for="inputfname">First name</label>
+                            <input type="text" id="inputfname" name="inputfname" autocomplete="given-name" required>
+                        </div>
+                        <div>
+                            <label for="inputlname">Last name</label>
+                            <input type="text" id="inputlname" name="inputlname" autocomplete="family-name" required>
+                        </div>
+                    </div>
+
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" autocomplete="username" required>
+
+                    <label for="inputemail">Email</label>
+                    <input type="email" id="inputemail" name="inputemail" autocomplete="email" required>
+
+                    <div class="auth-row">
+                        <div>
+                            <label for="password1">Password</label>
+                            <input type="password" id="password1" name="password1" autocomplete="new-password" required>
+                        </div>
+                        <div>
+                            <label for="password2">Confirm</label>
+                            <input type="password" id="password2" name="password2" autocomplete="new-password" required>
+                        </div>
+                    </div>
+
+                    <button class="btn btn--magenta" type="submit">CREATE ACCOUNT</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="band band--contact" id="contact">
+    <div class="wrap contact-band">
+        <div class="contact-copy">
+            <p class="eyebrow">// OPEN_A_CHANNEL</p>
+            <h2 class="section-title">TALK TO THE CREW</h2>
+            <p>
+                Found a bug, want a problem added to the set, or looking to run a
+                tournament on the platform? We read everything that comes in.
+            </p>
+            <a class="btn btn--cyan-outline" href="{% url 'contact' %}">SEND A MESSAGE</a>
+        </div>
+
+        <div class="contact-meta">
+            <dl>
+                <dt>WANNA CONTRIBUTE OR JUST CONNECT</dt>
+                <dd><a href="mailto:aadeshmalani@gmail.com">aadeshmalani@gmail.com</a></dd>
+
+                <dt>STATUS</dt>
+                <dd class="status-line"><span class="pulse-dot"></span>ALL SYSTEMS ONLINE</dd>
+            </dl>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
