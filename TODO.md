@@ -3,85 +3,45 @@
 Outstanding work in dependency order. See [README.md](README.md) for what already
 works and where things live.
 
-**Two things dominate everything else: the sandbox and the websocket layer.** The
-restructuring in §0 was hours of work; those two are weeks. Don't let the first
-feel like progress on the second.
+**Two things dominate everything else: the sandbox and the websocket layer.**
+Everything in §0 is cleanup measured in hours; those two are weeks. Don't let
+progress on the first feel like progress on the second.
 
----
-
-## Progress
-
-**Done since the last pass — the whole §0 restructure, essentially.**
-
-The app split landed: `Questions` → `Learning` (practice UI), with `problembank`
-extracted as the data owner. Tables were renamed in place rather than dropped, so
-nothing was lost in the move. `judge/` and `mentor/` are still the only missing
-pieces of the target layout.
+Status: the §0 restructure landed (`learning` + `problembank` split, tables
+renamed in place, 10 problems / 73 test cases seeded), the project is
+**BYTE//BRAWL** everywhere, and `problembank` is now a real data owner —
+`selectors.py` is in place and `learning/views.py` goes through it instead of the
+ORM. `judge/` has been committed to as a **plain Python package**, not a Django
+app. **Still true: nothing executes code.** RUN, SUBMIT, and the guru remain
+simulated in JavaScript. That's §1 and §2, and it's the whole ballgame.
 
 ```
-Learning ─┐
+learning ─┐
           ├──→ problembank ──→ judge*, mentor*        (* not built yet)
-Compete ──┘
+compete ──┘
 ```
-
-The data model absorbed most of its outstanding fixes: `q_no` is unique (that was
-a live 500), the oversized `CharField`s became `TextField`s, `expected_output`
-arrived, `Submission` gained `code`/`lang`/verdict choices, and `TestCases` gained
-`test_case_no` + `visiblity` — ordering and public/private, which the judge needs.
-
-The problem bank is seeded with **10 problems (3 Easy / 4 Medium / 3 Hard) and 73
-test cases**, expected outputs generated from reference solvers rather than
-hand-typed, and spot-checked against 24 known answers.
-
-Both problem pages now consume the real schema — description, input/output formats
-with constraints, worked example, and difficulty pills colour-coded per the design
-on both the list and the detail page.
-
-**Still true: nothing executes code.** RUN, SUBMIT, and the guru remain simulated
-in JavaScript. That's §1 and §2, and it's the whole ballgame.
 
 ---
 
-## 0. Restructure
+## 0. Restructure — remaining
 
-- [x] ~~Rename `Questions` app → **`Learning`**~~ — tables renamed in place, all
-      rows preserved.
-- [x] ~~Extract the data owner app~~ — landed as `problembank`.
-- [x] ~~Rename the model `Questions` → `Problem`~~ — landed as `Problems`, still
-      plural. Django convention is singular; low priority.
-- [ ] Write `problembank/selectors.py` so `learning` and `compete` never reach into
-      its ORM: `random_problem()`, `judge_cases_for(problem)`. **Not started** —
-      `learning/views.py` imports the models directly today.
+- [ ] **`fetch_random_problem` still crashes on a difficulty with no problems.**
+      The guard reads `if q_no is None`, but `q_no` is built with `list(...)`, so
+      an empty result is `[]` — never `None`. The check never fires and
+      `random.choice([])` raises a bare `IndexError`. Needs `if not q_no:`.
+      Note the values are case-sensitive: `"easy"` matches nothing, `"Easy"` does.
+- [ ] **Add the test-case selector** — `fetch_judge_cases(problem)` ordered by
+      `test_case_no`, and a public-only variant. Deliberately deferred until the
+      judge's `types.py` fixes what shape a case needs to be in; the judge is the
+      consumer, so it should decide. `TestCases` is imported in `selectors.py` but
+      unused until then.
 - [ ] Namespace templates (`learning/templates/learning/…`). Still flat, so the
       first duplicate filename in another app silently wins.
-- [x] ~~Seed command~~ — `problembank/management/commands/seed_problems.py`,
-      idempotent, `--clear` supported.
 - [ ] **Move to Postgres.** Still SQLite.
-- [x] ~~App naming is inconsistent~~ — settled on lowercase. `home`, `compete`,
-      `learning`, `problembank`, `judge`, and the project package `bytebrawl`
-      all follow the same rule now.
+- [ ] Rename the model `Problems` → `Problem`. Django convention is singular;
+      low priority.
 
 ### Model fixes
-
-- [x] ~~`q_no` needs `unique=True`~~ — was a live 500 on duplicates.
-- [x] ~~`q_content` → `TextField`~~ — now `q_description`.
-- [x] ~~`TestCases.test_case` → `TextField`~~
-- [x] ~~`TestCase.expected_output`~~
-- [x] ~~`TestCase.is_sample`~~ — landed as `visiblity` (PUBLIC/PRIVATE), which is
-      more expressive.
-- [x] ~~`Submission.code` and `Submission.language`~~ — landed as `code` / `lang`.
-- [x] ~~`Submission.verdict` → add `choices`~~
-- [x] ~~Add `difficulty`~~ — with Easy/Medium/Hard choices matching the design.
-- [ ] `date_published`: `DateField(default=datetime.now)` holds a `datetime` in
-      memory and a `date` after reload. Use `date.today`. **Still open.**
-- [ ] `__str__` on every model — admin still shows `Problems object (1)`, which is
-      painful for hand-entering test cases.
-- [ ] Rename the `q_id` FKs to `problem`. The column is `q_id_id`, and `tc.q_id`
-      returns a model instance, not an id.
-- [ ] Remaining fields: `acceptance`, `slug`, solved-by-user.
-- [ ] Multiple tags per problem. `q_tag` is still one `CharField(30)`.
-
-### New — found while seeding and wiring the pages
 
 - [ ] **`visiblity` is missing an `i`.** Rename to `visibility` before more code
       references it; right now it's one field and one line in the seeder.
@@ -93,31 +53,36 @@ in JavaScript. That's §1 and §2, and it's the whole ballgame.
       displays both plus tests-passed; without columns they can't survive a reload.
 - [ ] `TestCases` has no `Meta.ordering`. `test_case_no` exists, but without a
       default ordering "case 3 failed" isn't stable between queries.
-- [ ] `Problems.objects.all()` in `learning.views.questions` has no `order_by`, so
-      list order is whatever SQLite returns.
+- [ ] `date_published`: `DateField(default=datetime.now)` holds a `datetime` in
+      memory and a `date` after reload. Use `date.today`.
+- [ ] `__str__` on every model — admin still shows `Problems object (1)`, which is
+      painful for hand-entering test cases.
+- [ ] Rename the `q_id` FKs to `problem`. The column is `q_id_id`, and `tc.q_id`
+      returns a model instance, not an id.
+- [ ] Remaining fields: `acceptance`, `slug`, solved-by-user.
+- [ ] Multiple tags per problem. `q_tag` is still one `CharField(30)`.
 - [ ] The `# This will inclued Constrainsts` comment is on both `q_input_format`
       **and** `q_output_format` — copy-paste; constraints on an output format
       doesn't parse.
-- [ ] `learning/views.py` imports `JsonResponse`, `TestCases`, `Submission` and
-      uses none of them.
 
 ---
 
 ## 1. Judge (`judge/`)
 
-- [ ] **Decide what `judge/` is.** It's currently scaffolded as a Django app —
-      `apps.py`, `models.py`, `migrations/`, `views.py`, `admin.py` — and is *not*
-      in `INSTALLED_APPS`. The plan was a plain Python package with no models, so
-      it stays testable without a database and can move to a queue worker or its
-      own container later. Either delete the Django scaffolding or commit to it
-      deliberately.
+**Settled: `judge/` is a plain Python package, not a Django app.** The `apps.py`,
+`models.py`, `migrations/`, `views.py`, `admin.py` scaffolding is deleted and it
+stays out of `INSTALLED_APPS` — so it's testable without a database and can move
+to a queue worker or its own container later. `core.py` exists but is empty.
+
 - [ ] **`judge/reference.py` is a verbatim copy of the seed command**, including its
-      `BaseCommand` class and `problembank` imports. If the reference solvers are
-      wanted as judge fixtures, extract just the solver functions; otherwise delete
-      it. Two copies will drift.
+      `BaseCommand` class and `problembank` imports. That import is now a
+      dependency pointing the wrong way — a plain package reaching into a Django
+      app. If the reference solvers are wanted as judge fixtures, extract just the
+      solver functions; otherwise delete it. Two copies will drift.
 - [ ] **Stub first.** `grade()` returning a hardcoded verdict, wired to a real POST
       handler, with the JS mocks deleted. This makes the whole request path real
-      while only execution stays fake — and it decouples §2 from §3.
+      while only execution stays fake — and it decouples §2 from §3. `core.py` is
+      the natural home and is currently empty.
 - [ ] `types.py`: `TestCase`, `CaseResult`, `Verdict`, `RunResult` as dataclasses.
 - [ ] `grade(code, language, cases) -> Verdict` and `run_once(code, language, stdin)`.
 - [ ] **Accept the POST.** The page already sends `action` (`submit`/`run`/`guru`),
@@ -150,7 +115,7 @@ in JavaScript. That's §1 and §2, and it's the whole ballgame.
 ## 2. Mentor (`mentor/`)
 
 - [ ] **The package doesn't exist yet.** Same shape as the judge: plain Python, no
-      models, so `Compete` can't reach it by construction.
+      models, so `compete` can't reach it by construction.
 - [ ] `ask(problem, code, failing_case, history) -> reply`. Stateless.
 - [ ] System prompt enforcing Socratic behaviour: ask questions, point at gaps,
       **never** emit working code.
@@ -198,16 +163,13 @@ Currently `HttpResponse("This is Compete Page")`.
 
 ## 5. Problem pages — remaining UI
 
-- [x] ~~Problem panel needs a worked example and constraints~~ — `q_sample_io`
-      renders in a mono block; constraints ship inside `q_input_format`. Note the
-      design asked for constraints as a *bullet list*; they're a mono block today.
-- [x] ~~Restore the DIFFICULTY column~~ — outlined pill in the difficulty colour, on
-      both the list and the detail header.
 - [ ] **Pick one source of truth for the worked example.** `q_sample_io` is authored
       copy built from test case 1, and cases 1–2 are marked `PUBLIC` — so the
       `PUBLIC` flag currently has no consumer, and an authored example can silently
       disagree with the graded fixture. Either render public cases instead, or keep
       `q_sample_io` and show public cases from case 2 onward.
+- [ ] Constraints ship inside `q_input_format` as a mono block; the design asked
+      for a *bullet list*.
 - [ ] ACCEPTANCE % and STATUS (SOLVED green / OPEN muted) columns — both need data
       the judge produces.
 - [ ] TOGGLE LAYOUT: split (`1fr 1.3fr 0.9fr`) ⇄ stacked (`1.4fr 1fr`, currently
@@ -236,27 +198,15 @@ Currently `HttpResponse("This is Compete Page")`.
 
 ## 7. Site-wide
 
-- [x] ~~**Rename the project to Byte Brawl — `CODE//WARS` is taken.**~~ Codewars is
-      an existing, live coding-practice site, so the old name couldn't ship. The
-      slash mark survives: `BYTE//BRAWL`, same three-span treatment, same colours
-      (cyan / magenta / white). Landed — copy, CSS classes (`.logo-byte` /
-      `.logo-slash` / `.logo-brawl`), the `guru@bytebrawl: ~/run` prompt, the
-      Python package and the project directory that holds `manage.py` (both now
-      `bytebrawl/`) with their `DJANGO_SETTINGS_MODULE` / `ROOT_URLCONF` /
-      `WSGI_APPLICATION` references, plus `README.md`, `.gitignore`, and this
-      file. No source file mentions the old name anywhere.
 - [ ] **The repo root is still `C:\Comding\python\CodeWars`** — rename to
-      `ByteBrawl`, and rename the GitHub remote to match. Can't be done from a
-      shell or editor running inside the folder; close them first. Cosmetic —
-      nothing in the code reads the path.
+      `ByteBrawl`, and rename the GitHub remote (`thequantummenece/CodeWars`) to
+      match. Can't be done from a shell or editor running inside the folder; close
+      them first. Cosmetic — nothing in the code reads the path.
 - [ ] **The contact form doesn't save.** `home.models.Contact` exists and is
       migrated, but `contact()` only sets `sent=True` — nothing is written, and the
       form has no `phone` field the model requires.
 - [ ] No mail backend, so nothing is sent either.
 - [ ] About / Contact copy is placeholder text; replace it.
-- [x] ~~**`README.md` still describes the app as `Questions`**~~ — the structure
-      section now matches the tree (`problembank` / `learning`, lowercase apps,
-      `bytebrawl/` project package).
 - [ ] **Rotate `SECRET_KEY` before the first deploy — it is in public git history.**
       `settings.py:23` holds the `django-insecure-` key `startproject` generated,
       and it was pushed in the initial commit. Harmless while this is a local dev
@@ -269,4 +219,9 @@ Currently `HttpResponse("This is Compete Page")`.
       is needed after every CSS change in development.
 - [ ] No tests anywhere. The `judge` package is the natural place to start — pure
       functions, so its tests need no database. The seeded fixtures double as a
-      grading corpus.
+      grading corpus. `problembank/tests.py` is still an empty `startapp` stub;
+      the selectors are the other obvious candidate, since they now carry the
+      ordering and not-found rules.
+- [ ] Branch names must be kebab-case per the naming standard —
+      `feature/judge_implementation` should be `feature/judge-implementation`.
+      No upstream is tracking it yet, so `git branch -m` is enough.
