@@ -1,4 +1,4 @@
-# CODE//WARS — TODO
+# BYTE//BRAWL — TODO
 
 Outstanding work in dependency order. See [README.md](README.md) for what already
 works and where things live.
@@ -49,16 +49,17 @@ in JavaScript. That's §1 and §2, and it's the whole ballgame.
 - [x] ~~Extract the data owner app~~ — landed as `problembank`.
 - [x] ~~Rename the model `Questions` → `Problem`~~ — landed as `Problems`, still
       plural. Django convention is singular; low priority.
-- [ ] Write `problembank/selectors.py` so `Learning` and `Compete` never reach into
+- [ ] Write `problembank/selectors.py` so `learning` and `compete` never reach into
       its ORM: `random_problem()`, `judge_cases_for(problem)`. **Not started** —
-      `Learning/views.py` imports the models directly today.
-- [ ] Namespace templates (`Learning/templates/Learning/…`). Still flat, so the
+      `learning/views.py` imports the models directly today.
+- [ ] Namespace templates (`learning/templates/learning/…`). Still flat, so the
       first duplicate filename in another app silently wins.
 - [x] ~~Seed command~~ — `problembank/management/commands/seed_problems.py`,
       idempotent, `--clear` supported.
 - [ ] **Move to Postgres.** Still SQLite.
-- [ ] App naming is inconsistent: `Home`, `Compete`, `Learning` are CapitalCase,
-      `problembank` and `judge` are lowercase. Pick one.
+- [x] ~~App naming is inconsistent~~ — settled on lowercase. `home`, `compete`,
+      `learning`, `problembank`, `judge`, and the project package `bytebrawl`
+      all follow the same rule now.
 
 ### Model fixes
 
@@ -92,12 +93,12 @@ in JavaScript. That's §1 and §2, and it's the whole ballgame.
       displays both plus tests-passed; without columns they can't survive a reload.
 - [ ] `TestCases` has no `Meta.ordering`. `test_case_no` exists, but without a
       default ordering "case 3 failed" isn't stable between queries.
-- [ ] `Problems.objects.all()` in `Learning.views.questions` has no `order_by`, so
+- [ ] `Problems.objects.all()` in `learning.views.questions` has no `order_by`, so
       list order is whatever SQLite returns.
 - [ ] The `# This will inclued Constrainsts` comment is on both `q_input_format`
       **and** `q_output_format` — copy-paste; constraints on an output format
       doesn't parse.
-- [ ] `Learning/views.py` imports `JsonResponse`, `TestCases`, `Submission` and
+- [ ] `learning/views.py` imports `JsonResponse`, `TestCases`, `Submission` and
       uses none of them.
 
 ---
@@ -155,9 +156,9 @@ in JavaScript. That's §1 and §2, and it's the whole ballgame.
       **never** emit working code.
 - [ ] "ASK THE GURU" in the verdict modal must pass the **real** failing case and
       user code, not a canned string. Marked `TODO(mentor)`.
-- [ ] Chat history per user + problem — a `GuruMessage` model in `Learning`.
+- [ ] Chat history per user + problem — a `GuruMessage` model in `learning`.
 - [ ] Two tone variants (encouraging vs. direct), per-account or A/B.
-- [ ] `Compete` simply never imports `mentor`, so duels can't reach it.
+- [ ] `compete` simply never imports `mentor`, so duels can't reach it.
 
 ---
 
@@ -235,13 +236,27 @@ Currently `HttpResponse("This is Compete Page")`.
 
 ## 7. Site-wide
 
-- [ ] **The contact form doesn't save.** `Home.models.Contact` exists and is
+- [x] ~~**Rename the project to Byte Brawl — `CODE//WARS` is taken.**~~ Codewars is
+      an existing, live coding-practice site, so the old name couldn't ship. The
+      slash mark survives: `BYTE//BRAWL`, same three-span treatment, same colours
+      (cyan / magenta / white). Landed — copy, CSS classes (`.logo-byte` /
+      `.logo-slash` / `.logo-brawl`), the `guru@bytebrawl: ~/run` prompt, the
+      Python package and the project directory that holds `manage.py` (both now
+      `bytebrawl/`) with their `DJANGO_SETTINGS_MODULE` / `ROOT_URLCONF` /
+      `WSGI_APPLICATION` references, plus `README.md`, `.gitignore`, and this
+      file. No source file mentions the old name anywhere.
+- [ ] **The repo root is still `C:\Comding\python\CodeWars`** — rename to
+      `ByteBrawl`, and rename the GitHub remote to match. Can't be done from a
+      shell or editor running inside the folder; close them first. Cosmetic —
+      nothing in the code reads the path.
+- [ ] **The contact form doesn't save.** `home.models.Contact` exists and is
       migrated, but `contact()` only sets `sent=True` — nothing is written, and the
       form has no `phone` field the model requires.
 - [ ] No mail backend, so nothing is sent either.
 - [ ] About / Contact copy is placeholder text; replace it.
-- [ ] **`README.md` still describes the app as `Questions`** and predates the
-      `problembank` split — its structure section is out of date.
+- [x] ~~**`README.md` still describes the app as `Questions`**~~ — the structure
+      section now matches the tree (`problembank` / `learning`, lowercase apps,
+      `bytebrawl/` project package).
 - [ ] **Rotate `SECRET_KEY` before the first deploy — it is in public git history.**
       `settings.py:23` holds the `django-insecure-` key `startproject` generated,
       and it was pushed in the initial commit. Harmless while this is a local dev

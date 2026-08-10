@@ -1,4 +1,4 @@
-# CODE//WARS
+# BYTE//BRAWL
 
 A gamified coding practice platform. Solve problems with an AI mentor that gives
 hints rather than answers, then drop the mentor and duel other developers on a
@@ -6,7 +6,7 @@ hints rather than answers, then drop the mentor and duel other developers on a
 
 Django 5.2 · SQLite (Postgres planned) · server-rendered templates · vanilla JS
 
-Status as of **2026-08-05**: the front end is built against the design handoff and
+Status as of **2026-08-10**: the front end is built against the design handoff and
 runs on real data. **Neither the judge nor the mentor exists** — code submission,
 test results, and guru replies are simulated client-side. See [TODO.md](TODO.md).
 
@@ -41,7 +41,7 @@ a passing verdict can't be mistaken for a real one.
 ## Running it
 
 ```bash
-cd codewars
+cd bytebrawl
 python manage.py migrate
 python manage.py createsuperuser     # to seed problems via /admin
 python manage.py runserver
@@ -112,15 +112,15 @@ branches.
 ## Structure
 
 ```
-CodeWars/
+ByteBrawl/
 ├── README.md
 ├── TODO.md
 ├── .claude/
 │   ├── DEsign/README.md           design handoff — source of truth for UI
 │   └── skills/nomenclature-check/ naming audit skill
-└── codewars/
+└── bytebrawl/
     ├── manage.py
-    ├── codewars/                  project config (settings, urls, wsgi, asgi)
+    ├── bytebrawl/                 project config (settings, urls, wsgi, asgi)
     │
     ├── home/                      home, about, contact, and all auth
     │   ├── authentication.py      blogin / blogout / signin
@@ -204,7 +204,7 @@ Extend `base.html` and fill the blocks:
 
 ```django
 {% extends "base.html" %}
-{% block title %}Thing | CODE//WARS{% endblock %}
+{% block title %}Thing | BYTE//BRAWL{% endblock %}
 {% block page_class %}page--sidebar{% endblock %}   {# optional #}
 {% block sidebar %}{% include "partials/sidebar.html" %}{% endblock %}
 {% block content %}...{% endblock %}
