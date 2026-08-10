@@ -4,10 +4,10 @@ from problembank.selectors import fetch_all_problems , fetch_problem
 
 def questions(request):
     questions = fetch_all_problems()
-    return render(request, 'questions.html', {'questions': questions})
+    return render(request, 'learning/questions.html', {'questions': questions})
 
 def question_description(request ,question_id):
     if(not question_id.isdigit()):
         return HttpResponse("No Such Question Exist")
     question = fetch_problem(question_id=question_id)
-    return render(request, 'question_description.html', {'question': question})
+    return render(request, 'learning/question_description.html', {'question': question})

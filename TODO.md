@@ -11,8 +11,9 @@ Status: the §0 restructure landed (`learning` + `problembank` split, tables
 renamed in place, 10 problems / 73 test cases seeded), the project is
 **BYTE//BRAWL** everywhere, and `problembank` is now a real data owner —
 `selectors.py` is in place and `learning/views.py` goes through it instead of the
-ORM. `judge/` has been committed to as a **plain Python package**, not a Django
-app. **Still true: nothing executes code.** RUN, SUBMIT, and the guru remain
+ORM. Templates are namespaced per app (`learning/questions.html`), so no bare
+name is shadowable. `judge/` has been committed to as a **plain Python package**,
+not a Django app. **Still true: nothing executes code.** RUN, SUBMIT, and the guru remain
 simulated in JavaScript. That's §1 and §2, and it's the whole ballgame.
 
 ```
@@ -35,8 +36,6 @@ compete ──┘
       judge's `types.py` fixes what shape a case needs to be in; the judge is the
       consumer, so it should decide. `TestCases` is imported in `selectors.py` but
       unused until then.
-- [ ] Namespace templates (`learning/templates/learning/…`). Still flat, so the
-      first duplicate filename in another app silently wins.
 - [ ] **Move to Postgres.** Still SQLite.
 - [ ] Rename the model `Problems` → `Problem`. Django convention is singular;
       low priority.
