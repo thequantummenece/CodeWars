@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CODE//WARS — neon/cyberpunk design system
+   BYTE//BRAWL — neon/cyberpunk design system
    Tokens taken from the design handoff in .claude/
    Rule: no border-radius anywhere. Sharp corners throughout.
    ========================================================================== */
@@ -112,9 +112,9 @@ h1, h2, h3 {
     white-space: nowrap;
 }
 
-.logo-code { color: var(--cyan); }
+.logo-byte { color: var(--cyan); }
 .logo-slash { color: var(--magenta); }
-.logo-wars { color: #ffffff; }
+.logo-brawl { color: #ffffff; }
 
 .logo--sm {
     font-size: 17px;

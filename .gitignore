@@ -25,7 +25,7 @@ db.sqlite3.bak-*
 *.log
 local_settings.py
 
-# collectstatic output. Sources live in codewars/static/ and ARE tracked.
+# collectstatic output. Sources live in the project's static/ and ARE tracked.
 /staticfiles/
 /static_root/
 /media/
