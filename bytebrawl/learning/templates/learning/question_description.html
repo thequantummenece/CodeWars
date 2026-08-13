@@ -56,13 +56,9 @@
 </textarea>
 
                 <div class="codespace-foot">
-                    <input class="custom-input" type="text" name="custom_input" id="customInput"
-                           autocomplete="off" placeholder="Custom input (leave blank to use the example)">
-
                     <div class="codespace-actions">
-                        <span class="codespace-hint">RUN is ungraded. SUBMIT grades against the hidden suite.</span>
+                        <span class="codespace-hint">SUBMIT grades against the hidden suite.</span>
                         <div class="codespace-btns">
-                            <button class="btn btn--cyan-outline" type="button" id="runBtn">RUN</button>
                             <button class="btn btn--cyan" type="submit" id="submitBtn">SUBMIT</button>
                         </div>
                     </div>
@@ -118,23 +114,6 @@
             <button class="btn btn--ghost" type="button" data-close>BACK TO CODE</button>
             <button class="btn btn--green" type="button" id="askGuruBtn">ASK THE GURU</button>
         </div>
-    </div>
-</div>
-
-
-{# ------------------------------------------------------------------- RUN #}
-<div class="modal" id="runModal" hidden>
-    <div class="modal-backdrop" data-close></div>
-
-    <div class="term">
-        <div class="term-bar">
-            <span class="term-dot term-dot--red"></span>
-            <span class="term-dot term-dot--yellow"></span>
-            <span class="term-dot term-dot--green"></span>
-            <span class="term-title">guru@bytebrawl: ~/run</span>
-            <button class="term-close" type="button" data-close>CLOSE</button>
-        </div>
-        <pre class="term-body" id="termBody"></pre>
     </div>
 </div>
 {% endblock %}

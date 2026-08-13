@@ -1,16 +1,21 @@
 /* ==========================================================================
-   Question detail — RUN / SUBMIT / AI Guru
+   Question detail — SUBMIT / AI Guru
    ==========================================================================
 
    Everything below POSTs to the current URL and then renders a SIMULATED
    result. No view reads these posts yet.
 
+   RUN was removed deliberately, not deferred to a stub: an ungraded run needs
+   arbitrary stdin, and nothing in the schema describes what valid stdin for a
+   problem looks like — `q_input_format` is prose. It comes back once the
+   sandbox exists and there's a machine-readable input spec to check against.
+
    TODO(judge): the judge is going into its own package, shared by Questions
    and Compete. When it lands:
      - have the POST target return JSON instead of the page HTML
      - `await response.json()` at each marked spot below
-     - delete mockVerdict() / mockRunOutput() / mockGuruReply() entirely
-     - render the real verdict, per-case results, stdout/stderr, exit code
+     - delete mockVerdict() / mockGuruReply() entirely
+     - render the real verdict and per-case results
      - grading is async (queued execution), so SUBMIT should poll or open a
        websocket for the result rather than assume it arrives in the response
    ========================================================================== */
@@ -24,8 +29,6 @@
     }
 
     var codeEditor = document.getElementById('codeEditor');
-    var customInput = document.getElementById('customInput');
-    var runBtn = document.getElementById('runBtn');
     var guruForm = document.getElementById('guruForm');
     var guruInput = document.getElementById('guruInput');
     var guruThread = document.getElementById('guruThread');
@@ -36,9 +39,6 @@
     var verdictFail = document.getElementById('verdictFail');
     var caseList = document.getElementById('caseList');
     var askGuruBtn = document.getElementById('askGuruBtn');
-
-    var runModal = document.getElementById('runModal');
-    var termBody = document.getElementById('termBody');
 
     var TOTAL_CASES = 8;
     var lastVerdict = null;
@@ -94,11 +94,9 @@
         if (event.key !== 'Escape') {
             return;
         }
-        [verdictModal, runModal].forEach(function (modal) {
-            if (modal && !modal.hidden) {
-                closeModal(modal);
-            }
-        });
+        if (verdictModal && !verdictModal.hidden) {
+            closeModal(verdictModal);
+        }
     });
 
     /* ---------------------------------------------------------- SIMULATION */
@@ -116,32 +114,6 @@
             runtime: (20 + Math.floor(Math.random() * 90)) + ' ms',
             memory: (12 + Math.random() * 6).toFixed(1) + ' MB'
         };
-    }
-
-    function mockRunOutput(code, input) {
-        var shown = input || '(example input)';
-        var failed = Math.random() < 0.25;
-
-        var lines = [
-            '$ python solution.py --input ' + shown,
-            'compiling...',
-            'executing solve()...',
-            ''
-        ];
-
-        if (failed) {
-            lines.push('Traceback (most recent call last):');
-            lines.push('  File "solution.py", line 2, in solve');
-            lines.push('NameError: name \'result\' is not defined');
-            lines.push('');
-            lines.push('[process exited with code 1 in 0.08s]');
-        } else {
-            lines.push('[2, 7, 11, 15]');
-            lines.push('');
-            lines.push('[process exited with code 0 in 0.04s]');
-        }
-
-        return { lines: lines, failed: failed };
     }
 
     function mockGuruReply(verdict) {
@@ -191,28 +163,6 @@
         }
     }
 
-    function renderTerminal(result) {
-        termBody.innerHTML = '';
-        result.lines.forEach(function (line) {
-            var row = document.createElement('span');
-            row.className = 'term-line';
-            if (/^Traceback|^ {2}File|Error:/.test(line)) {
-                row.classList.add('term-line--err');
-            } else if (/exited with code 0/.test(line)) {
-                row.classList.add('term-line--ok');
-            } else if (/exited with code [1-9]/.test(line)) {
-                row.classList.add('term-line--err');
-            }
-            row.textContent = line;
-            termBody.appendChild(row);
-        });
-
-        var cursor = document.createElement('span');
-        cursor.className = 'term-cursor';
-        cursor.textContent = '$ ';
-        termBody.appendChild(cursor);
-    }
-
     function pushGuruMessage(text, who) {
         var bubble = document.createElement('p');
         bubble.className = 'guru-msg guru-msg--' + who;
@@ -228,25 +178,13 @@
 
         post({
             action: 'submit',
-            code: codeEditor.value,
-            custom_input: customInput.value
+            code: codeEditor.value
         });
         // TODO(judge): const verdict = await response.json();
         lastVerdict = mockVerdict();
 
         renderVerdict(lastVerdict);
         openModal(verdictModal);
-    });
-
-    runBtn.addEventListener('click', function () {
-        post({
-            action: 'run',
-            code: codeEditor.value,
-            custom_input: customInput.value
-        });
-        // TODO(judge): stream real stdout/stderr/exit code into the terminal.
-        renderTerminal(mockRunOutput(codeEditor.value, customInput.value));
-        openModal(runModal);
     });
 
     askGuruBtn.addEventListener('click', function () {
