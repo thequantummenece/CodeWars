@@ -25,7 +25,7 @@ def fetch_random_problem(difficulty):
                     flat=True
                 )
             )
-        if q_no is None:
+        if not q_no:
             raise Problems.DoesNotExist(f"No problems with difficulty {difficulty!r}")
 
         random_q_no = random.choice(q_no)

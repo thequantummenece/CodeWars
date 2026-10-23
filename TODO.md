@@ -27,7 +27,7 @@ compete ──┘
 
 ## 0. Restructure — remaining
 
-- [ ] **`fetch_random_problem` still crashes on a difficulty with no problems.**
+- [x] **`fetch_random_problem` still crashes on a difficulty with no problems.**
       The guard reads `if q_no is None`, but `q_no` is built with `list(...)`, so
       an empty result is `[]` — never `None`. The check never fires and
       `random.choice([])` raises a bare `IndexError`. Needs `if not q_no:`.
