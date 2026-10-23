@@ -23,7 +23,8 @@ def blogin(request):
             login(request, user)
             messages.success(request,"Successfully logged in ")
             return redirect('home')
-    else:return HttpResponse("Not a Valid Login")
+    else:
+        return HttpResponse("Not a Valid Login")
 
 def blogout(request):
     if request.method == "GET":
@@ -52,7 +53,8 @@ def signin(request):
         
         if(password2 == password):
             try:
-                validate_password(password, User(username=username, email=email, first_name=fname, last_name=lname))
+                candidate = User(username=username, email=email, first_name=fname, last_name=lname)
+                validate_password(password, candidate)
             except ValidationError as e:
                 messages.add_message(request, messages.ERROR, ' '.join(e.messages))
                 return redirect('home')
