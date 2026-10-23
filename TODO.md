@@ -266,9 +266,12 @@ Currently `HttpResponse("This is Compete Page")`.
       `ByteBrawl`, and rename the GitHub remote (`thequantummenece/CodeWars`) to
       match. Can't be done from a shell or editor running inside the folder; close
       them first. Cosmetic — nothing in the code reads the path.
-- [ ] **The contact form doesn't save.** `home.models.Contact` exists and is
+- [x] **The contact form doesn't save.** `home.models.Contact` exists and is
       migrated, but `contact()` only sets `sent=True` — nothing is written, and the
       form has no `phone` field the model requires.
+      *Done: `contact()` saves a `Contact` (subject is prepended to `content`,
+      the model has no subject column); `phone` is now `blank=True`
+      (`home` `0002`). Missing name/email/message shows an error, saves nothing.*
 - [ ] No mail backend, so nothing is sent either.
 - [ ] About / Contact copy is placeholder text; replace it.
 - [ ] **Rotate `SECRET_KEY` before the first deploy — it is in public git history.**

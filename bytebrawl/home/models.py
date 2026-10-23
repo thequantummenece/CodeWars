@@ -5,7 +5,7 @@ class Contact(models.Model):
     Sno = models.AutoField(primary_key=True)
     name = models.CharField(max_length= 100)
     email = models.CharField(max_length= 250)
-    phone = models.CharField(max_length = 14)
+    phone = models.CharField(max_length = 14, blank=True)  # the contact form has no phone field
     content = models.TextField()
 
     def __str__(self):

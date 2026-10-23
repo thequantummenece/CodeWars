@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.test import TestCase
 
+from .models import Contact
+
 SIGNUP = {
     "inputfname": "Ada", "inputlname": "Lovelace", "username": "ada",
     "inputemail": "ada@example.com", "password1": "k3yb0ard-Brawl!", "password2": "k3yb0ard-Brawl!",
@@ -35,3 +37,17 @@ class SignupTests(TestCase):
     def test_valid_signup_creates_user(self):
         self.client.post("/signup/", SIGNUP)
         self.assertTrue(User.objects.filter(username="ada").exists())
+
+
+class ContactTests(TestCase):
+    def test_post_saves_contact(self):
+        response = self.client.post("/contact/", {
+            "name": "Ada", "email": "ada@example.com", "subject": "Hi", "message": "Hello",
+        })
+        self.assertContains(response, "TRANSMISSION RECEIVED")
+        contact = Contact.objects.get()
+        self.assertEqual((contact.name, contact.content), ("Ada", "Hi\n\nHello"))
+
+    def test_missing_field_saves_nothing(self):
+        self.client.post("/contact/", {"name": "Ada"})
+        self.assertFalse(Contact.objects.exists())

@@ -31,7 +31,6 @@ test results, and guru replies are simulated client-side. See [TODO.md](TODO.md)
 | **AI Guru** | Does not exist. Replies are canned strings. |
 | **Compete** | `HttpResponse("This is Compete Page")` — plain text, outside the design. |
 | **Profile** | Not built. Elo is hardcoded `1450` in the nav. |
-| **Contact form** | Posts and acknowledges, but never writes to the `Contact` model. |
 
 The simulated results carry a visible "TEMPORARY" notice in the verdict modal so
 a passing verdict can't be mistaken for a real one.
@@ -136,7 +135,7 @@ ByteBrawl/
     │   └── templates/             questions.html, question_description.html
     │
     ├── compete/                   placeholder only
-    ├── judge/                     scaffolded, empty — see TODO §1
+    ├── judge/                     plain package: types, grade() stub, reference solvers
     │
     ├── templates/                 project-level shared
     │   ├── base.html              blocks: title, page_class, sidebar,
