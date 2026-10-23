@@ -383,13 +383,13 @@ class Command(BaseCommand):
             )
 
             # Rebuild rather than append, so re-running doesn't duplicate.
-            TestCases.objects.filter(q_id=problem).delete()
+            TestCases.objects.filter(problem=problem).delete()
 
             TestCases.objects.bulk_create([
                 TestCases(
-                    q_id=problem,
+                    problem=problem,
                     test_case_no=index,
-                    visiblity='PUBLIC' if index <= PUBLIC_CASES else 'PRIVATE',
+                    visibility='PUBLIC' if index <= PUBLIC_CASES else 'PRIVATE',
                     test_case=raw_input,
                     expected_output=solver(raw_input),
                 )

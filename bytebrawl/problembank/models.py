@@ -19,9 +19,9 @@ class Problems(models.Model):
     date_published = models.DateField(default=datetime.now)
 
 class TestCases(models.Model):
-    q_id = models.ForeignKey(Problems, on_delete=models.CASCADE)
+    problem = models.ForeignKey(Problems, on_delete=models.CASCADE)
     test_case_no = models.IntegerField(unique=False,default=1)
-    visiblity = models.CharField(
+    visibility = models.CharField(
         max_length=20,
         choices=[
             ("PUBLIC", "PUBLIC"),

@@ -43,7 +43,7 @@ compete ──┘
 
 ### Model fixes
 
-- [ ] **`visiblity` is missing an `i`.** Rename to `visibility` before more code
+- [x] **`visiblity` is missing an `i`.** Rename to `visibility` before more code
       references it; right now it's one field and one line in the seeder.
 - [ ] **`Submission.verdict` has `default="WA"`, so any row missing a verdict
       reads as Wrong Answer.** Settled (see §1): rows are written only *after*
@@ -60,8 +60,10 @@ compete ──┘
       memory and a `date` after reload. Use `date.today`.
 - [ ] `__str__` on every model — admin still shows `Problems object (1)`, which is
       painful for hand-entering test cases.
-- [ ] Rename the `q_id` FKs to `problem`. The column is `q_id_id`, and `tc.q_id`
-      returns a model instance, not an id.
+- [x] Rename the `q_id` FKs to `problem`. The column is `q_id_id`, and `tc.q_id`
+      returns a model instance, not an id. *Done (`0003`): only `TestCases.q_id`
+      was an FK — `Submission` already used `problem`. `Problems.q_id` is the
+      PK, not an FK, and keeps its name.*
 - [ ] Remaining fields: `acceptance`, `slug`, solved-by-user.
 - [ ] Multiple tags per problem. `q_tag` is still one `CharField(30)`.
 - [ ] The `# This will inclued Constrainsts` comment is on both `q_input_format`
