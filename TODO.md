@@ -125,7 +125,7 @@ comparison, no verdict, no `Submission` row.
       field to the `X-CSRFToken` header — `csrfToken()` already reads it out of
       the DOM, so the helper is unchanged.
 - [ ] **Decide where problem identity comes from.** The URL already carries it
-      (`<str:question_id>` → `q_no`) and the view can trust that. Recommend *not*
+      (`<int:question_id>` → `q_no`) and the view can trust that. Recommend *not*
       accepting `q_no`/`q_id` in the body: two sources of truth for one fact, one
       of them client-controlled, means a POST to `/questions/1/` carrying
       `q_no: 9` has to be adjudicated — and getting it wrong credits an easy
@@ -237,8 +237,10 @@ Currently `HttpResponse("This is Compete Page")`.
       hardcoded). Both rule sets already exist — it's a class swap, not new CSS.
 - [ ] Persist editor contents per user + problem.
 - [ ] Slug routes (`/problems/two-sum`) per the design, instead of `q_no`.
-- [ ] `/questions/<non-numeric>/` returns **200** with plain-text "No Such Question
-      Exist" — should be a real 404.
+- [x] `/questions/<non-numeric>/` returns **200** with plain-text "No Such Question
+      Exist" — should be a real 404. *Done: the route is now `<int:question_id>`,
+      so non-numeric ids 404 in the resolver; unknown ids already 404 via
+      `get_object_or_404`.*
 
 ---
 
