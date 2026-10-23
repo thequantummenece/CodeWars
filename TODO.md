@@ -45,15 +45,20 @@ compete ──┘
 
 - [x] **`visiblity` is missing an `i`.** Rename to `visibility` before more code
       references it; right now it's one field and one line in the seeder.
-- [ ] **`Submission.verdict` has `default="WA"`, so any row missing a verdict
+- [x] **`Submission.verdict` has `default="WA"`, so any row missing a verdict
       reads as Wrong Answer.** Settled (see §1): rows are written only *after*
       grading finishes, so there is no unjudged row to represent — drop the
       default outright rather than adding a `PENDING` choice or a `status`
       column. With no default, code that forgets to set a verdict raises instead
       of silently recording a wrong answer. `max_length=3` is correct as-is;
-      every verdict code fits.
-- [ ] **`Submission` has nowhere for runtime and memory.** The verdict modal
+      every verdict code fits. *Done (`0004`). Correction: dropping the default
+      alone does **not** raise — Django gives a `CharField` an implicit `""`
+      default, so a forgotten verdict would save as `""`. A `CheckConstraint`
+      (`submission_verdict_valid`) now makes it raise `IntegrityError`.*
+- [x] **`Submission` has nowhere for runtime and memory.** The verdict modal
       displays both plus tests-passed; without columns they can't survive a reload.
+      *Done (`0004`): nullable `runtime_ms` and `memory_kb`. Tests-passed has no
+      column yet.*
 - [ ] `TestCases` has no `Meta.ordering`. `test_case_no` exists, but without a
       default ordering "case 3 failed" isn't stable between queries.
 - [ ] `date_published`: `DateField(default=datetime.now)` holds a `datetime` in

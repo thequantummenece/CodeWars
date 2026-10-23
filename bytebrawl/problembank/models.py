@@ -47,7 +47,18 @@ class Submission(models.Model):
     verdict = models.CharField(
         max_length=3,
         choices=VERDICT_CHOICES,
-        default="WA",
     )
+    runtime_ms = models.PositiveIntegerField(null=True, blank=True)
+    memory_kb = models.PositiveIntegerField(null=True, blank=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Without this a forgotten verdict saves as "" (CharField's implicit default).
+        # Meta can't see VERDICT_CHOICES, so keep this list in step with it.
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(verdict__in=["AC", "WA", "TLE", "RE", "MLE"]),
+                name="submission_verdict_valid",
+            ),
+        ]
 
