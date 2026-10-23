@@ -288,11 +288,15 @@ Currently `HttpResponse("This is Compete Page")`.
       `.custom-input` (`:960-978`) have no markup referencing them. Left in place
       deliberately — authored design work RUN will need again — but it's dead
       until then.
-- [ ] No tests anywhere. The `judge` package is the natural place to start — pure
+- [x] No tests anywhere. The `judge` package is the natural place to start — pure
       functions, so its tests need no database. The seeded fixtures double as a
       grading corpus. `problembank/tests.py` is still an empty `startapp` stub;
       the selectors are the other obvious candidate, since they now carry the
       ordering and not-found rules.
+      *Done (a start): `judge/tests.py` (pure `unittest`, no DB),
+      `problembank/tests.py` (selectors, verdict constraint), `learning/tests.py`
+      (404s), `home/tests.py` (auth missing fields, password validation, contact).
+      Run with `python manage.py test`.*
 - [ ] Branch names must be kebab-case per the naming standard —
       `feature/judge_implementation` should be `feature/judge-implementation`.
       No upstream is tracking it yet, so `git branch -m` is enough.
