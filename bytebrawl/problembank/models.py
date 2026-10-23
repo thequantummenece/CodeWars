@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from datetime import date
 from django.contrib.auth.models import User
 
 class Problems(models.Model):
@@ -7,8 +7,8 @@ class Problems(models.Model):
     q_no = models.IntegerField(unique=True)
     q_title = models.CharField(max_length=100)
     q_description = models.TextField()
-    q_input_format = models.TextField() # This will inclued Constrainsts 
-    q_output_format = models.TextField() # This will inclued Constrainsts 
+    q_input_format = models.TextField()  # Constraints are inlined here.
+    q_output_format = models.TextField()
     q_sample_io = models.TextField() 
     q_tag = models.CharField(max_length=30)
     q_difficulty = models.CharField(
@@ -16,7 +16,10 @@ class Problems(models.Model):
         choices=[("Easy","Easy"),("Medium","Medium"),("Hard","Hard")],
         default="Medium",
     )
-    date_published = models.DateField(default=datetime.now)
+    date_published = models.DateField(default=date.today)
+
+    def __str__(self):
+        return f"{self.q_no}. {self.q_title}"
 
 class TestCases(models.Model):
     problem = models.ForeignKey(Problems, on_delete=models.CASCADE)
@@ -31,6 +34,12 @@ class TestCases(models.Model):
     )
     test_case = models.TextField()
     expected_output = models.TextField()
+
+    class Meta:
+        ordering = ["test_case_no"]
+
+    def __str__(self):
+        return f"{self.problem} - case {self.test_case_no}"
 
 class Submission(models.Model):
     VERDICT_CHOICES = [
@@ -61,4 +70,7 @@ class Submission(models.Model):
                 name="submission_verdict_valid",
             ),
         ]
+
+    def __str__(self):
+        return f"{self.user} - {self.problem} - {self.verdict}"
 

@@ -59,11 +59,11 @@ compete ──┘
       displays both plus tests-passed; without columns they can't survive a reload.
       *Done (`0004`): nullable `runtime_ms` and `memory_kb`. Tests-passed has no
       column yet.*
-- [ ] `TestCases` has no `Meta.ordering`. `test_case_no` exists, but without a
+- [x] `TestCases` has no `Meta.ordering`. `test_case_no` exists, but without a
       default ordering "case 3 failed" isn't stable between queries.
-- [ ] `date_published`: `DateField(default=datetime.now)` holds a `datetime` in
+- [x] `date_published`: `DateField(default=datetime.now)` holds a `datetime` in
       memory and a `date` after reload. Use `date.today`.
-- [ ] `__str__` on every model — admin still shows `Problems object (1)`, which is
+- [x] `__str__` on every model — admin still shows `Problems object (1)`, which is
       painful for hand-entering test cases.
 - [x] Rename the `q_id` FKs to `problem`. The column is `q_id_id`, and `tc.q_id`
       returns a model instance, not an id. *Done (`0003`): only `TestCases.q_id`
@@ -71,7 +71,7 @@ compete ──┘
       PK, not an FK, and keeps its name.*
 - [ ] Remaining fields: `acceptance`, `slug`, solved-by-user.
 - [ ] Multiple tags per problem. `q_tag` is still one `CharField(30)`.
-- [ ] The `# This will inclued Constrainsts` comment is on both `q_input_format`
+- [x] The `# This will inclued Constrainsts` comment is on both `q_input_format`
       **and** `q_output_format` — copy-paste; constraints on an output format
       doesn't parse.
 
