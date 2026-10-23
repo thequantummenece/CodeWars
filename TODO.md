@@ -92,11 +92,13 @@ back once the sandbox exists and there's a machine-readable input spec to check
 against; at that point it's the easier of the two paths — one execution, no
 comparison, no verdict, no `Submission` row.
 
-- [ ] **`judge/reference.py` is a verbatim copy of the seed command**, including its
+- [x] **`judge/reference.py` is a verbatim copy of the seed command**, including its
       `BaseCommand` class and `problembank` imports. That import is now a
       dependency pointing the wrong way — a plain package reaching into a Django
       app. If the reference solvers are wanted as judge fixtures, extract just the
       solver functions; otherwise delete it. Two copies will drift.
+      *Done: `judge/reference.py` now holds only the solver functions; the seed
+      command imports them from there (problembank → judge, arrow points down).*
 - [ ] **Stub first.** `grade()` returning a hardcoded verdict, wired to a real POST
       handler, with the JS mocks deleted. This makes the whole request path real
       while only execution stays fake — and it decouples §2 from §3. `core.py` is
