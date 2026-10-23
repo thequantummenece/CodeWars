@@ -82,7 +82,7 @@ compete ──┘
 **Settled: `judge/` is a plain Python package, not a Django app.** The `apps.py`,
 `models.py`, `migrations/`, `views.py`, `admin.py` scaffolding is deleted and it
 stays out of `INSTALLED_APPS` — so it's testable without a database and can move
-to a queue worker or its own container later. `core.py` exists but is empty.
+to a queue worker or its own container later. `core.py` holds the `grade()` stub.
 
 **Settled: the submission lifecycle.** SUBMIT hands the code to a task scheduler
 (Celery) and returns immediately. While the task is in flight the browser shows a
@@ -110,9 +110,13 @@ comparison, no verdict, no `Submission` row.
       handler, with the JS mocks deleted. This makes the whole request path real
       while only execution stays fake — and it decouples §2 from §3. `core.py` is
       the natural home and is currently empty.
-- [ ] `types.py`: `TestCase`, `CaseResult`, `Verdict` as dataclasses. `RunResult`
+      *Partial: `core.grade()` exists as a stub (always `WA`, never executes
+      code, so it cannot mark anything solved). POST wiring and deleting the JS
+      mocks are still open.*
+- [x] `types.py`: `TestCase`, `CaseResult`, `Verdict` as dataclasses. `RunResult`
       waits for RUN to come back.
 - [ ] `grade(code, language, cases) -> Verdict`. `run_once()` is deferred with RUN.
+      *Signature and stub in `core.py`; real execution waits on the sandbox.*
 - [ ] **Accept the POST.** The page sends `action` and `code` to the current URL
       with a CSRF token. Nothing reads it.
 - [ ] **Switch the request body to JSON.** It's `multipart/form-data` today, so
