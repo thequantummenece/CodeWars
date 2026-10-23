@@ -23,9 +23,8 @@ def solve_valid_parentheses(data):
     for char in data.strip():
         if char in '([{':
             stack.append(char)
-        elif char in pairs:
-            if not stack or stack.pop() != pairs[char]:
-                return 'NO'
+        elif char in pairs and (not stack or stack.pop() != pairs[char]):
+            return 'NO'
     return 'YES' if not stack else 'NO'
 
 

@@ -9,7 +9,9 @@ from judge.types import CaseResult, TestCase, Verdict
 
 class TypesTests(unittest.TestCase):
     def test_first_failure_is_first_failing_case(self):
-        verdict = Verdict("WA", [CaseResult(1, True), CaseResult(2, False), CaseResult(3, False)])
+        verdict = Verdict(
+            "WA", [CaseResult(1, True), CaseResult(2, False), CaseResult(3, False)]
+        )
         self.assertEqual(verdict.first_failure.number, 2)
 
     def test_first_failure_is_none_when_all_pass(self):
@@ -37,4 +39,6 @@ class ReferenceTests(unittest.TestCase):
         self.assertEqual(reference.solve_edit_distance("horse\nros"), "3")
 
     def test_trapping_rain(self):
-        self.assertEqual(reference.solve_trapping_rain("12\n0 1 0 2 1 0 1 3 2 1 2 1"), "6")
+        self.assertEqual(
+            reference.solve_trapping_rain("12\n0 1 0 2 1 0 1 3 2 1 2 1"), "6"
+        )

@@ -1,6 +1,8 @@
-from django.db import models
 from datetime import date
+
 from django.contrib.auth.models import User
+from django.db import models
+
 
 class Problems(models.Model):
     q_id = models.AutoField(primary_key=True)

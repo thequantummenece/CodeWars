@@ -28,7 +28,6 @@ from judge.reference import (
 )
 from problembank.models import Problems, TestCases
 
-
 # ---------------------------------------------------------------- fixtures
 
 PROBLEMS = [

@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from problembank.selectors import fetch_all_problems , fetch_problem
+
+from problembank.selectors import fetch_all_problems, fetch_problem
+
 
 def questions(request):
     questions = fetch_all_problems()
