@@ -32,11 +32,12 @@ compete ──┘
       an empty result is `[]` — never `None`. The check never fires and
       `random.choice([])` raises a bare `IndexError`. Needs `if not q_no:`.
       Note the values are case-sensitive: `"easy"` matches nothing, `"Easy"` does.
-- [ ] **Add the test-case selector** — `fetch_judge_cases(problem)` ordered by
+- [x] **Add the test-case selector** — `fetch_judge_cases(problem)` ordered by
       `test_case_no`, and a public-only variant. Deliberately deferred until the
       judge's `types.py` fixes what shape a case needs to be in; the judge is the
       consumer, so it should decide. `TestCases` is imported in `selectors.py` but
-      unused until then.
+      unused until then. *Done: `fetch_judge_cases(problem)` and
+      `fetch_public_judge_cases(problem)` return `judge.types.TestCase` lists.*
 - [ ] **Move to Postgres.** Still SQLite.
 - [ ] Rename the model `Problems` → `Problem`. Django convention is singular;
       low priority.
