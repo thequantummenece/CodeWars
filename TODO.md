@@ -246,12 +246,15 @@ Currently `HttpResponse("This is Compete Page")`.
 
 ## 6. Auth
 
-- [ ] `request.POST['key']` in `blogin` and `signin` raises `MultiValueDictKeyError`
+- [x] `request.POST['key']` in `blogin` and `signin` raises `MultiValueDictKeyError`
       on a missing field. The `required` attributes are client-side only — curl or
       a devtools edit walks past them. Use `.get()` with a presence check.
-- [ ] `AUTH_PASSWORD_VALIDATORS` is configured but bypassed: `create_user()` never
+      *Done: missing fields redirect home with an error message.*
+- [x] `AUTH_PASSWORD_VALIDATORS` is configured but bypassed: `create_user()` never
       consults it, so a 1-character password is accepted. Route signup through a
       form that calls `validate_password()`.
+      *Done without a form: `signin` calls `validate_password()` directly before
+      `create_user()` and shows the errors as a message, like the other errors.*
 - [ ] Email isn't unique on Django's `User`. Matters once password reset exists.
 - [ ] `GET /login/` returns a plain-text 200 ("Not a Valid Login") outside the design.
 

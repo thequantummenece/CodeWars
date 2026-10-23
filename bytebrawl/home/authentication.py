@@ -1,13 +1,18 @@
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.shortcuts import render, HttpResponse, redirect
 
 def blogin(request):
     if request.method =="POST":
         #parameters for post
-        loginusername = request.POST["lusername"]
-        loginpassword = request.POST["Password"]
+        loginusername = request.POST.get("lusername", "")
+        loginpassword = request.POST.get("Password", "")
+        if not loginusername or not loginpassword:
+            messages.error(request,"Username and password are required")
+            return redirect('home')
 
         user = authenticate(username = loginusername,password = loginpassword)
         if user is None:
@@ -29,18 +34,28 @@ def blogout(request):
 def signin(request):
     if request.method == "POST":
         # parameters
-        fname = request.POST['inputfname']
-        lname = request.POST['inputlname']
-        username = request.POST['username']
-        password = request.POST['password1']
-        password2 = request.POST['password2']
-        email = request.POST['inputemail']
+        fname = request.POST.get('inputfname', '')
+        lname = request.POST.get('inputlname', '')
+        username = request.POST.get('username', '')
+        password = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+        email = request.POST.get('inputemail', '')
+
+        if not all([fname, lname, username, password, password2, email]):
+            messages.add_message(request, messages.ERROR, 'All fields are required')
+            return redirect('home')
 
         if User.objects.filter(username=username).exists():
             messages.add_message(request, messages.ERROR, 'User Name already Exist')
             return redirect('home')
         
         if(password2 == password):
+            try:
+                validate_password(password, User(username=username, email=email, first_name=fname, last_name=lname))
+            except ValidationError as e:
+                messages.add_message(request, messages.ERROR, ' '.join(e.messages))
+                return redirect('home')
+
             #creating user
             myuser = User.objects.create_user(username,email,password)
             myuser.first_name = fname
